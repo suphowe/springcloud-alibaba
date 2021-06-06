@@ -1,0 +1,29 @@
+server:
+  port: 8100
+spring:
+  application:
+    name: cloud-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  zipkin:
+    base-url: http://localhost:9411
+    discovery-client-enabled: false     # 关闭服务发现，否则Spring Cloud会把zipkin的url当做服务名称
+    sender:
+      type: web # 设置使用http的方式传输数据
+  sleuth:
+    sampler:
+      probability: 1.0 # spring.sleuth.sampler.probability=1.0表示以 100% 的概率将链路的数据上传给 Zipkin Server ， 在默认情况下 ， 该值为0.1
+    web:
+      client:
+        enabled: true
+# 开启feign熔断开关
+feign:
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        connectionTimeout: 5000 # 连接超时时间
+        readTimeout: 5000 # 请求与响应的时间间隔阈值

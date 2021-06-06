@@ -1,0 +1,27 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true             # 让gateway可以发现nacos中的微服务,开启通过网关映射微服务
+      routes:
+        - id: provider-route         # 映射路由id,当前路由的标识，要求唯一，可以随便填写
+          uri: lb://cloud-provider  # lb指的是从nacos中按照名称获取微服务，并遵循负载均衡策略
+          predicates:               # 断言（就是路由转发要满足的条件）
+            - Path=/provider/**     # 当请求路径满足Path指定的规则时，才进行路由转发  http://127.0.0.1:9000/provider/**
+          filters:                  # 过滤器,请求在传递过程中可以通过过滤器对其进行一定的修改
+            - StripPrefix=1         # 转发之前去掉1层路径
+
+        - id: consumer-route
+          uri: lb://cloud-consumer
+          predicates:
+            - Path=/consumer/**
+          filters:
+            - StripPrefix=1

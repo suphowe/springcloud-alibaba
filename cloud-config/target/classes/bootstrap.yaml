@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: cloud-config
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml    # 配置内容的数据格式,只支持 properties 和 yaml 类型
+        prefix: cloud-config    # 默认为 spring.application.name 的值，也可以通过配置项 spring.cloud.nacos.config.prefix来配置
+  profiles:
+    active: dev   # 当前环境对应的 profile
